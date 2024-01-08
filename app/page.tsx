@@ -24,6 +24,12 @@ export default function Home() {
     };
     setQuizList([...quizList, newQuiz]);
   }
+  function removeQuestion(index: any) {
+    let newQuizsList = [...quizList];
+
+    newQuizsList.splice(index, 1);
+    setQuizList([...newQuizsList]);
+  }
   function addAnwser(index: any) {
     let newQuizsList = [...quizList];
     let newAnwser = {
@@ -32,6 +38,12 @@ export default function Home() {
       isCorrect: false,
     };
     newQuizsList[index].anwsers = [...newQuizsList[index].anwsers, newAnwser];
+    setQuizList([...newQuizsList]);
+  }
+  function removeAnwser(index: any, jindex: any) {
+    let newQuizsList = [...quizList];
+
+    newQuizsList[index].anwsers.splice(jindex, 1);
     setQuizList([...newQuizsList]);
   }
   function questionOnChangeText(e: any, index: any) {
@@ -88,22 +100,24 @@ export default function Home() {
     } else {
       let newQuizsList = [...quizList];
       let checkScore = newQuizsList.map((item: any) =>
-        item.anwsers.map((item: any) => item.score).indexOf(0)
+        item.anwsers.map((item: any) => item.score)
       );
-      if (checkScore.indexOf(-1) != -1) {
+      if (checkScore.indexOf(0) != -1) {
         alert("Sorry all questions must have score > 0");
+        return;
       } else {
         let checkAnswersList = newQuizsList.map((item: any) =>
           item.anwsers.map((item: any) => item.isCorrect == true).indexOf(true)
         );
 
         if (checkAnswersList.indexOf(-1) != -1) {
-          alert("Sorry all questions must have atleast one correct anwser");
+          alert("Sorry all questions must have at least one correct anwser");
           return;
         } else {
         }
       }
     }
+    alert("Test created");
   }
   return (
     <main className=" min-h-screen  justify-between p-24">
@@ -125,6 +139,7 @@ export default function Home() {
         {quizList.map((quiz: any, index: any) => {
           return (
             <div key={quiz.id}>
+              <button onClick={() => removeQuestion(index)}>X</button>
               <input
                 type="text"
                 name={quiz.id + " name"}
@@ -149,6 +164,9 @@ export default function Home() {
                 return (
                   <div key={anwser.id}>
                     {/* <input type="radio" name={jindex} /> */}
+                    <button onClick={() => removeAnwser(index, jindex)}>
+                      X
+                    </button>
                     <input
                       type="text"
                       name={anwser.id}
